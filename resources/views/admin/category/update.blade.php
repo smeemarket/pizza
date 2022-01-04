@@ -8,23 +8,28 @@
         <div class="row">
           <div class="col-8 offset-3 mt-5">
             <div class="col-md-9">
-              <a href="{{ route('admin#category') }}" class="btn btn-sm btn-dark">
+              <button class="btn btn-sm btn-dark" onclick="goBack()">
                 <i class="fas fa-arrow-left"></i>
                 Back
-              </a>
+              </button>
               <div class="card mt-3">
                 <div class="card-header p-2">
-                  <legend class="text-center">Add Category</legend>
+                  <legend class="text-center">Edit Category</legend>
                 </div>
                 <div class="card-body">
                   <div class="tab-content">
                     <div class="active tab-pane" id="activity">
-                      <form method="POST" action="{{ route('admin#createCategory') }}" class="form-horizontal">
+                      <form method="POST" action="{{ route('admin#updateCategory') }}" class="form-horizontal">
                         @csrf
                         <div class="form-group row">
                           <label for="inputName" class="col-sm-2 col-form-label">Name</label>
                           <div class="col-sm-10">
-                            <input type="text" class="form-control" id="inputName" placeholder="Name" name="name">
+
+
+                            <input type="text" name="id" value="{{ $category->category_id }}" hidden>
+
+                            <input type="text" class="form-control" id="inputName" placeholder="Name" name="name"
+                              value="{{ old('name', $category->category_name) }}">
                             @if ($errors->has('name'))
                               <small class="text-danger">{{ $errors->first('name') }}</small>
                             @endif
@@ -34,7 +39,7 @@
 
                         <div class="form-group row">
                           <div class="offset-sm-2 col-sm-10">
-                            <button type="submit" class="btn bg-dark text-white">Add</button>
+                            <button type="submit" class="btn bg-dark text-white">Update</button>
                           </div>
                         </div>
                       </form>
@@ -51,3 +56,8 @@
   </div>
 
 @endsection
+<script>
+  function goBack() {
+    window.history.back();
+  }
+</script>

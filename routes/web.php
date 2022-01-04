@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\PizzaController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -30,17 +31,25 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 })->name('dashboard');
 
 // admin
-Route::group(['prefix' => 'admin'], function () {
-    // Route::get('/', 'AdminController@index')->name('admin#index');
+Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
+    // Route::get('/', 'CategoryController@index')->name('admin#index');
 
-    Route::get('profile', 'AdminController@profile')->name('admin#profile');
+    Route::get('profile', 'CategoryController@profile')->name('admin#profile');
 
-    Route::get('category', 'AdminController@category')->name('admin#category'); // list
-    Route::get('addCategory', 'AdminController@addCategory')->name('admin#addCategory');
-    Route::post('addCategory', 'AdminController@createCategory')->name('admin#addCategory');
-    Route::get('deleteCategory{id}', 'AdminController@deleteCategory')->name('admin#deleteCategory');
+    Route::get('category', 'CategoryController@category')->name('admin#category'); // list
+    Route::get('addCategory', 'CategoryController@addCategory')->name('admin#addCategory');
+    Route::post('addCategory', 'CategoryController@createCategory')->name('admin#createCategory');
+    Route::get('deleteCategory{id}', 'CategoryController@deleteCategory')->name('admin#deleteCategory');
+    Route::get('editCategory/{id}', 'CategoryController@editCategory')->name('admin#editCategory');
+    Route::post('editCategory', 'CategoryController@updateCategory')->name('admin#updateCategory');
+    Route::post('category', 'CategoryController@searchCategory')->name('admin#searchCategory');
 
-    Route::get('pizza', 'AdminController@pizza')->name('admin#pizza');
+    Route::get('pizza', 'PizzaController@pizza')->name('admin#pizza');
+    Route::get('createPizza', 'PizzaController@addPizza')->name('admin#addPizza');
+    Route::post('createPizza', 'PizzaController@createPizza')->name('admin#createPizza');
+    Route::get('deletePizza/{id}', 'PizzaController@deletePizza')->name('admin#deletePizza');
+    Route::get('pizzaInfo/{id}', 'PizzaController@pizzaInfo')->name('admin#pizzaInfo');
+    Route::get('edit/{id}', 'PizzaController@editPizza')->name('admin#editPizza');
 });
 
 // user

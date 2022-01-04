@@ -7,11 +7,32 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
+        @if (Session::has('createSuccess'))
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ Session::get('createSuccess') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        @endif
+        @if (Session::has('deleteSuccess'))
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ Session::get('deleteSuccess') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        @endif
         <div class="row">
           <div class="col-12 mt-4">
+            {{-- {{ $pizza->links() }} --}}
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Pizza Table</h3>
+                <h3 class="card-title">
+                  <a href="{{ route('admin#addPizza') }}" class="btn btn-sm bg-dark">
+                    <i class="fas fa-plus"></i>
+                  </a>
+                </h3>
 
                 <div class="card-tools">
                   <div class="input-group input-group-sm" style="width: 150px;">
@@ -36,58 +57,51 @@
                       <th>Price</th>
                       <th>Publish Status</th>
                       <th>Buy 1 Get 1 Status</th>
-                      <th></th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>Vegatable</td>
-                      <td>
-                        <img
-                          src="https://st.depositphotos.com/1003814/5052/i/950/depositphotos_50523105-stock-photo-pizza-with-tomatoes.jpg"
-                          class="img-thumbnail" width="100px">
-                      </td>
-                      <td>20000 kyats</td>
-                      <td>Yes</td>
-                      <td>Yes</td>
-                      <td>
-                        <button class="btn btn-sm bg-dark text-white"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-sm bg-danger text-white"><i class="fas fa-trash-alt"></i></button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>2</td>
-                      <td>Vegatable</td>
-                      <td>
-                        <img
-                          src="http://simply-delicious-food.com/wp-content/uploads/2020/06/Grilled-Pizza-Margherita-3.jpg"
-                          class="img-thumbnail" width="100px">
-                      </td>
-                      <td>20000 kyats</td>
-                      <td>Yes</td>
-                      <td>Yes</td>
-                      <td>
-                        <button class="btn btn-sm bg-dark text-white"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-sm bg-danger text-white"><i class="fas fa-trash-alt"></i></button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>3</td>
-                      <td>Vegatable</td>
-                      <td>
-                        <img
-                          src="https://www.biggerbolderbaking.com/wp-content/uploads/2019/07/15-Minute-Pizza-WS-Thumbnail.png"
-                          class="img-thumbnail" width="100px">
-                      </td>
-                      <td>20000 kyats</td>
-                      <td>Yes</td>
-                      <td>Yes</td>
-                      <td>
-                        <button class="btn btn-sm bg-dark text-white"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-sm bg-danger text-white"><i class="fas fa-trash-alt"></i></button>
-                      </td>
-                    </tr>
+                    @if ($pizza->total() == 0)
+                      <tr class="text-danger">
+                        <td class="text-muted" colspan="7">
+                          There is no data.
+                        </td>
+                      </tr>
+                    @else
+                      @foreach ($pizza as $item)
+                        <tr>
+                          <td>{{ $item->pizza_id }}</td>
+                          <td>{{ $item->pizza_name }}</td>
+                          <td>
+                            <img src="{{ asset('uploads/' . $item->image) }}" class="img-thumbnail" width="100px">
+                          </td>
+                          <td>{{ $item->price }}</td>
+                          <td>
+                            @if ($item->publish_status == '1')
+                              Publish
+                            @elseif($item->publish_status == '0')
+                              Unpublish
+                            @endif
+                          </td>
+                          <td>
+                            @if ($item->buy_one_get_one_status == '1')
+                              Yes
+                            @elseif($item->buy_one_get_one_status == '0')
+                              No
+                            @endif
+                          </td>
+                          <td>
+                            <a href="{{ route('admin#editPizza', $item->pizza_id) }}"
+                              class="btn btn-sm btn-secondary text-white"><i class="fas fa-edit"></i></a>
+                            <a href="{{ route('admin#deletePizza', $item->pizza_id) }}"
+                              class="btn btn-sm bg-danger text-white"><i class="fas fa-trash-alt"></i>
+                            </a>
+                            <a href="{{ route('admin#pizzaInfo', $item->pizza_id) }}"
+                              class="btn btn-sm btn-info text-black"><i class="fas fa-eye"></i></a>
+                          </td>
+                        </tr>
+                      @endforeach
+                    @endif
                   </tbody>
                 </table>
               </div>

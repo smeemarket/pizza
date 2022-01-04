@@ -12,6 +12,12 @@
   <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
   {{-- <link rel="stylesheet" href="../dist/css/adminlte.min.css"> --}}
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
+
+  <!-- CSS only -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <!-- input:file အတွက်လို -->
+
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -52,7 +58,7 @@
 
             <li class="nav-item">
               <a href="{{ route('admin#pizza') }}" class="nav-link">
-                <i class="fas fa-pizza-slice ms-5"></i>
+                <i class="fas fa-pizza-slice"></i>
                 <p>
                   Pizza
                 </p>
@@ -119,5 +125,10 @@
   <script src="{{ asset('dist/js/demo.js') }}"></script>
 
 </body>
+<script>
+  function goBack() {
+    window.history.back();
+  }
+</script>
 
 </html>

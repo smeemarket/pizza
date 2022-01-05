@@ -12,52 +12,76 @@
                   <legend class="text-center">User Profile</legend>
                 </div>
                 <div class="card-body">
+                  @if (Session::has('updateSuccess'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                      {{ Session::get('updateSuccess') }}
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                  @endif
+                  @if (Session::has('passwordErrors'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                      {{ Session::get('passwordErrors') }}
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                  @endif
                   <div class="tab-content">
                     <div class="active tab-pane" id="activity">
-                      <form class="form-horizontal">
+                      <form action="{{ route('admin#updateProfile', $user->id) }}" method="POST"
+                        class="form-horizontal">
+                        @csrf
                         <div class="form-group row">
-                          <label for="inputName" class="col-sm-2 col-form-label">Name</label>
-                          <div class="col-sm-10">
-                            <input type="email" class="form-control" id="inputName" placeholder="Name"
-                              value="{{ $user->name }}">
+                          <label for="inputName" class="col-sm-3 col-form-label">Name</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control" name="name" placeholder="Name"
+                              value="{{ old('name', $user->name) }}">
+                            @if ($errors->has('name'))
+                              <small class="text-danger">{{ $errors->first('name') }}</small>
+                            @endif
                           </div>
                         </div>
                         <div class="form-group row">
-                          <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
-                          <div class="col-sm-10">
-                            <input type="email" class="form-control" id="inputEmail" placeholder="Email"
-                              value="{{ $user->email }}">
-                          </div>
-                        </div>
-
-                        <div class="form-group row">
-                          <label for="inputPhone" class="col-sm-2 col-form-label">Phone</label>
-                          <div class="col-sm-10">
-                            <input type="number" class="form-control" id="inputPhone" placeholder="Phone"
-                              value="{{ $user->phone }}">
-                          </div>
-                        </div>
-
-                        <div class="form-group row">
-                          <label for="inputAddress" class="col-sm-2 col-form-label">Address</label>
-                          <div class="col-sm-10">
-                            <input type="text" class="form-control" id="inputAddress" placeholder="Address"
-                              value="{{ $user->address }}">
+                          <label for="inputEmail" class="col-sm-3 col-form-label">Email</label>
+                          <div class="col-sm-9">
+                            <input type="email" class="form-control" name="email" placeholder="Email"
+                              value="{{ old('email', $user->email) }}">
+                            @if ($errors->has('email'))
+                              <small class="text-danger">{{ $errors->first('email') }}</small>
+                            @endif
                           </div>
                         </div>
 
                         <div class="form-group row">
-                          <div class="offset-sm-2 col-sm-10">
-                            <a href="">Change Password</a>
+                          <label for="inputPhone" class="col-sm-3 col-form-label">Phone</label>
+                          <div class="col-sm-9">
+                            <input type="number" class="form-control" name="phone" placeholder="Phone"
+                              value="{{ old('phone', $user->phone) }}">
+                            @if ($errors->has('phone'))
+                              <small class="text-danger">{{ $errors->first('phone') }}</small>
+                            @endif
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <label for="inputAddress" class="col-sm-3 col-form-label">Address</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control" name="address" placeholder="Address"
+                              value="{{ old('address', $user->address) }}">
+                            @if ($errors->has('address'))
+                              <small class="text-danger">{{ $errors->first('address') }}</small>
+                            @endif
                           </div>
                         </div>
                         <div class="form-group row">
-                          <div class="offset-sm-2 col-sm-10">
-                            <button type="submit" class="btn bg-dark text-white">Submit</button>
+                          <div class="offset-sm-3 col-sm-9">
+                            <a href="{{ route('admin#changePasswordPage') }}">Change password</a>
+                            <button type="submit" class="btn btn-sm bg-dark text-white float-end">Update</button>
                           </div>
                         </div>
                       </form>
-
                     </div>
                   </div>
                 </div>

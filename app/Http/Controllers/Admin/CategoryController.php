@@ -16,20 +16,10 @@ class CategoryController extends Controller
     //     return view('admin.home');
     // }
 
-    // direct admin profile
-    public function profile()
-    {
-        $id = auth()->user()->id;
-        // dd($id);
-        $user = User::where('id', $id)->first();
-        // dd($user->toArray());
-        return view('admin.profile.index')->with('user', $user);
-    }
-
     // direct category page
     public function category()
     {
-        $categories = Category::paginate(2);
+        $categories = Category::paginate(9);
         return view('admin.category.list')->with('category', $categories);
     }
 
@@ -92,7 +82,8 @@ class CategoryController extends Controller
     // search category
     public function searchCategory(Request $request)
     {
-        $data = Category::where('category_name', 'like', '%' . $request->searchData . '%')->paginate(1);
+        $data = Category::where('category_name', 'like', '%' . $request->searchData . '%')->paginate(9);
+        $data->appends($request->all());
         // dd($data->toArray());
         return view('admin.category.list')->with('category', $data);
     }

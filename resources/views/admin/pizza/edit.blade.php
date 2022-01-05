@@ -23,26 +23,38 @@
                   </div>
                   <div class="tab-content">
                     <div class="active tab-pane" id="activity">
-                      <form method="POST" action="" class="form-horizontal" enctype="multipart/form-data">
+                      <form method="POST" action="{{ route('admin#updatePizza', $pizza->pizza_id) }}"
+                        class="form-horizontal" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group row">
                           <label for="inputName" class="col-sm-2 col-form-label">Name</label>
                           <div class="col-sm-10">
                             <input type="text" class="form-control" id="inputName" placeholder="Enter pizza name"
                               name="name" value="{{ old('name', $pizza->pizza_name) }}">
-                            {{-- @if ($errors->has('name'))
+                            @if ($errors->has('name'))
                               <small class="text-danger">{{ $errors->first('name') }}</small>
-                            @endif --}}
+                            @endif
                           </div>
                         </div>
+
+                        <div class="form-group row">
+                          <label class="col-sm-2 col-form-label">Image</label>
+                          <div class="col-sm-10">
+                            <input type="file" class="form-control" name="image">
+                            @if ($errors->has('image'))
+                              <small class="text-danger">{{ $errors->first('image') }}</small>
+                            @endif
+                          </div>
+                        </div>
+
                         <div class="form-group row">
                           <label class="col-sm-2 col-form-label">Price</label>
                           <div class="col-sm-10">
                             <input type="number" class="form-control" placeholder="Enter pizza price" name="price"
                               value="{{ old('price', $pizza->price) }}">
-                            {{-- @if ($errors->has('price'))
+                            @if ($errors->has('price'))
                               <small class="text-danger">{{ $errors->first('price') }}</small>
-                            @endif --}}
+                            @endif
                           </div>
                         </div>
                         <div class="form-group row">
@@ -82,9 +94,15 @@
                           <label class="col-sm-2 col-form-label">Category</label>
                           <div class="col-sm-10">
                             <select name="category" class="form-control">
-                              {{-- @foreach ($category as $item)
-                                <option value="{{ $item->category_id }}">{{ $item->category_name }}</option>
-                              @endforeach --}}
+                              @foreach ($category as $item)
+                                @if ($item->category_id == $pizza->category_id)
+                                  {{ $selected = 'selected' }}
+                                @else
+                                  {{ $selected = '' }}
+                                @endif
+                                <option value="{{ $item->category_id }}" {{ $selected }}>
+                                  {{ $item->category_name }}</option>
+                              @endforeach
                             </select>
                             {{-- @if ($errors->has('category'))
                               <small class="text-danger">{{ $errors->first('category') }}</small>
@@ -96,9 +114,9 @@
                           <div class="col-sm-10">
                             <input type="number" class="form-control" placeholder="Enter discount price" name="discount"
                               value="{{ old('discount', $pizza->discount_price) }}">
-                            {{-- @if ($errors->has('discount'))
+                            @if ($errors->has('discount'))
                               <small class="text-danger">{{ $errors->first('discount') }}</small>
-                            @endif --}}
+                            @endif
                           </div>
                         </div>
                         <div class="form-group row">
@@ -152,9 +170,9 @@
                           <div class="col-sm-10">
                             <input type="number" class="form-control" name="waitingTime"
                               placeholder="Enter waiting time" value="{{ old('waitingTime', $pizza->waiting_time) }}">
-                            {{-- @if ($errors->has('waitingTime'))
+                            @if ($errors->has('waitingTime'))
                               <small class="text-danger">{{ $errors->first('waitingTime') }}</small>
-                            @endif --}}
+                            @endif
                           </div>
                         </div>
                         <div class="form-group row">
@@ -162,15 +180,15 @@
                           <div class="col-sm-10">
                             <textarea name="description" id="" rows="3" class="form-control"
                               placeholder="Enter description">{{ old('description', $pizza->description) }}</textarea>
-                            {{-- @if ($errors->has('description'))
+                            @if ($errors->has('description'))
                               <small class="text-danger">{{ $errors->first('description') }}</small>
-                            @endif --}}
+                            @endif
                           </div>
                         </div>
 
                         <div class="form-group row">
                           <div class="offset-sm-2 col-sm-10">
-                            <button type="submit" class="btn bg-dark text-white">Add</button>
+                            <button type="submit" class="btn bg-dark text-white">Update</button>
                           </div>
                         </div>
                       </form>

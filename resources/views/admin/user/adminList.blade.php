@@ -6,42 +6,28 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        @if (Session::has('categorySuccess'))
-          <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ Session::get('categorySuccess') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-        @endif
-        @if (Session::has('categoryDelete'))
+        @if (Session::has('deleteSuccess'))
           <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ Session::get('categoryDelete') }}
+            {{ Session::get('deleteSuccess') }}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
         @endif
-        @if (Session::has('updateSuccess'))
-          <div class="alert alert-secondary alert-dismissible fade show" role="alert">
-            {{ Session::get('updateSuccess') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-        @endif
+
         <div class="row">
           <div class="col-12 mt-3">
-            {{ $category->links() }}
+            {{ $admin->links() }}
 
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
-                  <a href="{{ route('admin#addCategory') }}" class="btn btn-sm btn-outline-dark">Add Category</a>
+                  <a href="{{ route('admin#userList') }}" class="btn btn-sm btn-outline-dark">User List</a>
+                  <a href="{{ route('admin#adminList') }}" class="btn btn-sm btn-dark">Admin List</a>
                 </h3>
 
                 <div class="card-tools">
-                  <form action="{{ route('admin#searchCategory') }}" method="get">
+                  <form action="{{ route('admin#adminSearch') }}" method="get">
                     {{-- @csrf --}}
                     <div class="input-group input-group-sm" style="width: 150px;">
                       <input type="text" name="searchData" class="form-control float-right" placeholder="Search">
@@ -61,25 +47,37 @@
                   <thead>
                     <tr>
                       <th>ID</th>
-                      <th>Category Name</th>
-                      <th>Pizza Count</th>
-                      <th>Actions</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Phone</th>
+                      <th>Address</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                    @foreach ($category as $item)
-                      <tr>
-                        <td>{{ $item->category_id }}</td>
-                        <td>{{ $item->category_name }}</td>
-                        <td></td>
-                        <td>
-                          <a href="{{ route('admin#editCategory', $item->category_id) }}"
-                            class="btn btn-sm bg-dark text-white"><i class="fas fa-edit"></i></a>
-                          <a href="{{ route('admin#deleteCategory', $item->category_id) }}"
-                            class="btn btn-sm bg-danger text-white"><i class="fas fa-trash-alt"></i></a>
+                    @if ($admin->total() == 0)
+                      <tr class="text-danger">
+                        <td class="text-muted" colspan="6">
+                          There is no data.
                         </td>
                       </tr>
-                    @endforeach
+                    @else
+                      @foreach ($admin as $item)
+                        <tr>
+                          <td>{{ $item->id }}</td>
+                          <td>{{ $item->name }}</td>
+                          <td>{{ $item->email }}</td>
+                          <td>{{ $item->phone }}</td>
+                          <td>{{ $item->address }}</td>
+
+                          <td>
+                            <a href="{{ route('admin#adminDelete', $item->id) }}"
+                              class="btn btn-sm bg-danger text-white"><i class="fas fa-trash-alt"></i>
+                            </a>
+                          </td>
+                        </tr>
+                      @endforeach
+                    @endif
                   </tbody>
                 </table>
               </div>

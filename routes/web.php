@@ -34,7 +34,11 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     // Route::get('/', 'CategoryController@index')->name('admin#index');
 
-    Route::get('profile', 'CategoryController@profile')->name('admin#profile');
+    Route::get('profile', 'AdminController@profile')->name('admin#profile');
+    Route::post('update/{id}', 'AdminController@updateProfile')->name('admin#updateProfile');
+    Route::get('changePassword', 'AdminController@changePasswordPage')->name('admin#changePasswordPage');
+    Route::post('changePassword/{id}', 'AdminController@changePassword')->name('admin#changePassword');
+
 
     Route::get('category', 'CategoryController@category')->name('admin#category'); // list
     Route::get('addCategory', 'CategoryController@addCategory')->name('admin#addCategory');
@@ -42,7 +46,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::get('deleteCategory{id}', 'CategoryController@deleteCategory')->name('admin#deleteCategory');
     Route::get('editCategory/{id}', 'CategoryController@editCategory')->name('admin#editCategory');
     Route::post('editCategory', 'CategoryController@updateCategory')->name('admin#updateCategory');
-    Route::post('category', 'CategoryController@searchCategory')->name('admin#searchCategory');
+    Route::get('category/search', 'CategoryController@searchCategory')->name('admin#searchCategory');
 
     Route::get('pizza', 'PizzaController@pizza')->name('admin#pizza');
     Route::get('createPizza', 'PizzaController@addPizza')->name('admin#addPizza');
@@ -50,9 +54,20 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::get('deletePizza/{id}', 'PizzaController@deletePizza')->name('admin#deletePizza');
     Route::get('pizzaInfo/{id}', 'PizzaController@pizzaInfo')->name('admin#pizzaInfo');
     Route::get('edit/{id}', 'PizzaController@editPizza')->name('admin#editPizza');
+    Route::post('updatePizza/{id}', 'PizzaController@updatePizza')->name('admin#updatePizza');
+    Route::get('pizza/search', 'PizzaController@searchPizza')->name('admin#searchPizza');
+
+    Route::get('userList', 'UserController@userList')->name('admin#userList');
+    Route::get('adminList', 'UserController@adminList')->name('admin#adminList');
+
+    Route::get('userList/search', 'UserController@userSearch')->name('admin#userSearch');
+    Route::get('userList/delete/{id}', 'UserController@userDelete')->name("admin#userDelete");
+
+    Route::get('adminList/search', 'UserController@adminSearch')->name('admin#adminSearch');
+    Route::get('adminList/delete/{id}', 'UserController@adminDelete')->name("admin#adminDelete");
 });
 
 // user
-Route::group(['prefix' => 'user'], function () {
+Route::group(['prefix' => 'user', 'namespace' => 'User'], function () {
     Route::get('', 'UserController@index')->name('user#index');
 });

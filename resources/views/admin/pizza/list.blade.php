@@ -3,7 +3,6 @@
 @section('content')
   <div class="content-wrapper">
 
-
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
@@ -23,9 +22,17 @@
             </button>
           </div>
         @endif
+        @if (Session::has('updateSuccess'))
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ Session::get('updateSuccess') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        @endif
         <div class="row">
           <div class="col-12 mt-4">
-            {{-- {{ $pizza->links() }} --}}
+            {{ $pizza->links() }}
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
@@ -35,15 +42,18 @@
                 </h3>
 
                 <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px;">
-                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+                  <form action="{{ route('admin#searchPizza') }}" method="get">
+                    {{-- @csrf --}}
+                    <div class="input-group input-group-sm" style="width: 150px;">
 
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default">
-                        <i class="fas fa-search"></i>
-                      </button>
+                      <input type="text" name="pizzaSearch" class="form-control float-right" placeholder="Search">
+                      <div class="input-group-append">
+                        <button type="submit" class="btn btn-default">
+                          <i class="fas fa-search"></i>
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  </form>
                 </div>
               </div>
               <!-- /.card-header -->

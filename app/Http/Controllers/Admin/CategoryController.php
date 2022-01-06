@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\User;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,7 +20,26 @@ class CategoryController extends Controller
     // direct category page
     public function category()
     {
-        $categories = Category::paginate(9);
+        // $response = Category::get();
+        // $response = Category::where('category_id', 1)->value('category_name');
+        // $response = Category::pluck('category_id', 'category_name');
+        // dd($response->toArray());
+
+        // $response = Category::avg('category_id');
+        // dd($response);
+
+        // $response = Category::select('category_id', 'category_name as နာမည်')->get();
+        // dd($response->toArray());
+
+        // $response = DB::table('categories')->get();
+        // dd($response->toArray());
+        $categories = Category::select('categories.*', DB::raw('count(pizzas.category_id) as pizzaCount'))
+            ->leftJoin('pizzas', 'pizzas.category_id', 'categories.category_id')
+            ->groupBy('categories.category_id')
+            ->paginate(9);
+        // dd($categories->toArray());
+
+        // $categories = Category::paginate(9);
         return view('admin.category.list')->with('category', $categories);
     }
 
@@ -82,7 +102,12 @@ class CategoryController extends Controller
     // search category
     public function searchCategory(Request $request)
     {
-        $data = Category::where('category_name', 'like', '%' . $request->searchData . '%')->paginate(9);
+        $data = Category::where('category_name', 'like', '%' . $request->searchData . '%')
+            ->select('categories.*', DB::raw('count(pizzas.category_id) as pizzaCount'))
+            ->leftJoin('pizzas', 'pizzas.category_id', 'categories.category_id')
+            ->groupBy('categories.category_id')
+            ->paginate(9);
+
         $data->appends($request->all());
         // dd($data->toArray());
         return view('admin.category.list')->with('category', $data);

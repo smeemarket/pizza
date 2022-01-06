@@ -11,6 +11,7 @@ class UserController extends Controller
     // direct user list page
     public function userList()
     {
+        // dd(User::find(2)->toArray()); // id ဖြစ်မှ ရှာ
         $data = User::where('role', 'user')->paginate(9);
         return view('admin.user.userList')->with('user', $data);
     }

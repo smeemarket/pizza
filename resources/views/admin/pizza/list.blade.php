@@ -40,6 +40,8 @@
                     <i class="fas fa-plus"></i>
                   </a>
                 </h3>
+                <span class="fs-5 ms-5">Total - {{ $pizza->total() }}</span>
+
 
                 <div class="card-tools">
                   <form action="{{ route('admin#searchPizza') }}" method="get">

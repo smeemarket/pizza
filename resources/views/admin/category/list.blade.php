@@ -39,6 +39,7 @@
                 <h3 class="card-title">
                   <a href="{{ route('admin#addCategory') }}" class="btn btn-sm btn-outline-dark">Add Category</a>
                 </h3>
+                <span class="fs-5 ms-5">Total - {{ $category->total() }}</span>
 
                 <div class="card-tools">
                   <form action="{{ route('admin#searchCategory') }}" method="get">
@@ -71,7 +72,15 @@
                       <tr>
                         <td>{{ $item->category_id }}</td>
                         <td>{{ $item->category_name }}</td>
-                        <td></td>
+                        <td class="text-decoration-none text-black">
+                          @if ($item->pizzaCount == 0)
+                            {{ $item->pizzaCount }}
+                          @else
+                            <a href="{{ route('admin#categoryItem', $item->category_id) }}">
+                              {{ $item->pizzaCount }}
+                            </a>
+                          @endif
+                        </td>
                         <td>
                           <a href="{{ route('admin#editCategory', $item->category_id) }}"
                             class="btn btn-sm bg-dark text-white"><i class="fas fa-edit"></i></a>

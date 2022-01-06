@@ -156,6 +156,13 @@ class PizzaController extends Controller
         return view('admin.pizza.list')->with('pizza', $searchData);
     }
 
+    // look category item
+    public function categoryItem($id)
+    {
+        $data = Pizza::where('category_id', $id)->paginate(9);
+        return view('admin.category.item')->with('pizza', $data);
+    }
+
     private function requestUpdatePizzaData($request)
     {
         $arr = [

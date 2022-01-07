@@ -36,17 +36,19 @@
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">
-                  <a href="{{ route('admin#addPizza') }}" class="btn btn-sm bg-dark">
+                  <a href="{{ route('admin#addPizza') }}" class="btn btn-sm bg-dark mt-1">
                     <i class="fas fa-plus"></i>
                   </a>
                 </h3>
-                <span class="fs-5 ms-5">Total - {{ $pizza->total() }}</span>
+                <span class="fs-5 ms-4">Total - {{ $pizza->total() }}</span>
 
-
-                <div class="card-tools">
+                <div class="card-tools d-flex">
+                  <div class="mt-1 me-2">
+                    <a href="{{ route('admin#pizzaDownload') }}" class="btn btn-sm btn-success">CSV Download</a>
+                  </div>
                   <form action="{{ route('admin#searchPizza') }}" method="get">
                     {{-- @csrf --}}
-                    <div class="input-group input-group-sm" style="width: 150px;">
+                    <div class="input-group input-group-sm mt-1" style="width: 150px;">
 
                       <input type="text" name="pizzaSearch" class="form-control float-right" placeholder="Search">
                       <div class="input-group-append">

@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
@@ -102,14 +103,62 @@ class CategoryController extends Controller
     // search category
     public function searchCategory(Request $request)
     {
-        $data = Category::where('category_name', 'like', '%' . $request->searchData . '%')
+        $category = Category::where(
+            'category_name',
+            'like',
+            '%' . $request->searchData . '%'
+        )
             ->select('categories.*', DB::raw('count(pizzas.category_id) as pizzaCount'))
             ->leftJoin('pizzas', 'pizzas.category_id', 'categories.category_id')
             ->groupBy('categories.category_id')
             ->paginate(9);
 
-        $data->appends($request->all());
-        // dd($data->toArray());
-        return view('admin.category.list')->with('category', $data);
+        Session::put('SEARCH_DATA', $request->searchData);
+
+        $category->appends($request->all());
+        // dd($category->toArray());
+        return view('admin.category.list')->with('category', $category);
+    }
+
+    // category download
+    public function categoryDownload()
+    {
+        if (Session::has('SEARCH_DATA')) {
+            $category = Category::where(
+                'category_name',
+                'like',
+                '%' . Session::get('SEARCH_DATA') . '%'
+            )
+                ->select('categories.*', DB::raw('count(pizzas.category_id) as pizzaCount'))
+                ->leftJoin('pizzas', 'pizzas.category_id', 'categories.category_id')
+                ->groupBy('categories.category_id')
+                ->get();
+            Session::forget('SEARCH_DATA');
+        } else {
+            $category = Category::select('categories.*', DB::raw('count(pizzas.category_id) as pizzaCount'))
+                ->leftJoin('pizzas', 'pizzas.category_id', 'categories.category_id')
+                ->groupBy('categories.category_id')
+                ->get();
+        }
+
+        $csvExporter = new \Laracsv\Export();
+
+        $csvExporter->build($category, [
+            'category_id' => 'Id',
+            'category_name' => 'Name',
+            'pizzaCount' => 'Pizza Count',
+            'created_at' => 'Created Date',
+            'updated_at' => 'Updated Date'
+        ]);
+
+        $csvReader = $csvExporter->getReader();
+
+        $csvReader->setOutputBOM(\League\Csv\Reader::BOM_UTF8);
+
+        $filename = 'category.csv';
+
+        return response((string) $csvReader)
+            ->header('Content-Type', 'text/csv; charset=UTF-8')
+            ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
     }
 }

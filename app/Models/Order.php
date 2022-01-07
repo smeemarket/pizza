@@ -13,7 +13,7 @@ class Order extends Model
         'order_id',
         'customer_id',
         'pizza_id',
-        'carrier_id',
+        'pizza_count',
         'payment_status',
         'order_time'
     ];

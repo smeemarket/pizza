@@ -20,70 +20,82 @@
       <div class="col-3 me-5">
         <div class="">
           <div class="py-5 text-center">
-            <form class="d-flex m-5">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <form action="{{ route('user#searchItem') }}" method="GET" class="d-flex m-5">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searchData">
               <button class="btn btn-outline-dark" type="submit">Search</button>
             </form>
 
             <div class="">
-              <div class="m-2 p-2">All</div>
-              <div class="m-2 p-2">Seafood</div>
-              <div class="m-2 p-2">Chicken</div>
-              <div class="m-2 p-2">Cheese</div>
-              <div class="m-2 p-2">BBQ</div>
-              <div class="m-2 p-2">Ocean</div>
+              <div class="nav-item"><a class="nav-link text-black  " href="{{ route('user#index') }}">All</a>
+              </div>
+              @foreach ($category as $item)
+                <div class="nav-item"><a class="nav-link text-black"
+                    href="{{ route('user#categorySearch', $item->category_id) }}">{{ $item->category_name }}</a>
+                </div>
+              @endforeach
             </div>
             <hr>
-            <div class="text-center m-4 p-2">
-              <h3 class="mb-3">Start Date - End Date</h3>
-
-              <form>
-                <input type="date" name="" id="" class="form-control"> -
-                <input type="date" name="" id="" class="form-control">
-              </form>
-            </div>
-            <hr>
-            <div class="text-center m-4 p-2">
-              <h3 class="mb-3">Min - Max Amount</h3>
-
-              <form>
-                <input type="number" name="" id="" class="form-control" placeholder="minimum price"> -
-                <input type="number" name="" id="" class="form-control" placeholder="maximun price">
-              </form>
-            </div>
+            <form action="{{ route('user#searchPizzaItem') }}" method="get">
+              <div class="text-center m-4 p-2">
+                <h3 class="mb-3">Start Date - End Date</h3>
+                <input type="date" name="startDate" id="" class="form-control"> -
+                <input type="date" name="endDate" id="" class="form-control">
+              </div>
+              <hr>
+              <div class="text-center m-4 p-2">
+                <h3 class="mb-3">Min - Max Amount</h3>
+                <input type="number" name="minPrice" id="" class="form-control" placeholder="minimum price"> -
+                <input type="number" name="maxPrice" id="" class="form-control" placeholder="maximun price">
+              </div>
+              <div class="">
+                <button type="submit" class="btn btn-sm btn-dark">
+                  <i class="fas fa-search"></i> Search</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
       <div class="mt-5">
         <div class="row gx-4 gx-lg-5" id="pizza">
-          @foreach ($pizza as $item)
-            <div class="col-md-4 mb-5">
-              <div class="card h-100">
-                <!-- Sale badge-->
+          {{ $pizza->links() }}
+          @if ($pizza->total() == 0)
+            <tr class="text-danger">
+              <td class="text-muted" colspan="7">
+                There is no pizza.
+              </td>
+            </tr>
+          @else
+            @foreach ($pizza as $item)
+              <div class="col-md-4 mb-5">
+                <div class="card h-100">
+                  <!-- Sale badge-->
 
-                @if ($item->buy_one_get_one_status == '1')
-                  <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Buy 1 Get 1
+                  @if ($item->buy_one_get_one_status == '1')
+                    <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Buy 1 Get
+                      1
+                    </div>
+                  @endif
+                  <!-- Product image-->
+                  <img class="card-img-top" src="{{ asset('uploads/' . $item->image) }}" alt="..." />
+                  <!-- Product details-->
+                  <div class="card-body p-4">
+                    <div class="text-center">
+                      <!-- Product name-->
+                      <h5 class="fw-bolder">{{ $item->pizza_name }}</h5>
+                      <!-- Product price-->
+                      {{-- <span class="text-muted text-decoration-line-through">$20.00</span> $18.00 --}}
+                      {{ $item->price }} Kyats
+                    </div>
                   </div>
-                @endif
-                <!-- Product image-->
-                <img class="card-img-top" src="{{ asset('uploads/' . $item->image) }}" alt="..." />
-                <!-- Product details-->
-                <div class="card-body p-4">
-                  <div class="text-center">
-                    <!-- Product name-->
-                    <h5 class="fw-bolder">{{ $item->pizza_name }}</h5>
-                    <!-- Product price-->
-                    {{-- <span class="text-muted text-decoration-line-through">$20.00</span> $18.00 --}}
-                    {{ $item->price }}
+                  <!-- Product actions-->
+                  <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                    <div class="text-center"><a class="btn btn-outline-dark mt-auto"
+                        href="{{ route('user#pizzaDetails', $item->pizza_id) }}">More Details</a></div>
                   </div>
-                </div>
-                <!-- Product actions-->
-                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                  <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">More Details</a></div>
                 </div>
               </div>
-            </div>
-          @endforeach
+            @endforeach
+          @endif
         </div>
       </div>
     </div>
@@ -91,12 +103,32 @@
 
   <div class="text-center d-flex justify-content-center align-items-center" id="contact">
     <div class="col-4 border shadow-sm ps-5 pt-5 pe-5 pb-2 mb-5">
+      @if (Session::has('contactSuccess'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          {{ Session::get('contactSuccess') }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      @endif
       <h3>Contact Us</h3>
 
-      <form action="" class="my-4">
-        <input type="text" name="" id="" class="form-control my-3" placeholder="Name">
-        <input type="text" name="" id="" class="form-control my-3" placeholder="Email">
-        <textarea class="form-control my-3" id="exampleFormControlTextarea1" rows="3" placeholder="Message"></textarea>
+      <form action="{{ route('user#createContact') }}" method="POST" class="my-4">
+        @csrf
+        <input type="text" name="name" value="{{ old('name') }}" class="form-control my-3" placeholder="Name">
+        @if ($errors->has('name'))
+          <small class="text-danger">{{ $errors->first('name') }}</small>
+        @endif
+        <input type="email" name="email" value="{{ old('email') }}" class="form-control my-3" placeholder="Email">
+        @if ($errors->has('email'))
+          <small class="text-danger">{{ $errors->first('email') }}</small>
+        @endif
+        <textarea name="message" class="form-control my-3" id="exampleFormControlTextarea1" rows="3"
+          placeholder="Message">{{ old('message') }}</textarea>
+        @if ($errors->has('message'))
+          <small class="text-danger">{{ $errors->first('message') }}</small>
+        @endif
+        <br>
         <button type="submit" class="btn btn-outline-dark">Send <i class="fas fa-arrow-right"></i></button>
       </form>
     </div>

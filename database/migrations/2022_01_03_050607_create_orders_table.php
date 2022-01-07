@@ -17,7 +17,7 @@ class CreateOrdersTable extends Migration
             $table->id('order_id');
             $table->integer('customer_id');
             $table->integer('pizza_id');
-            $table->integer('carrier_id');
+            $table->integer('pizza_count');
             $table->integer('payment_status');
             $table->date('order_time');
             $table->timestamps();

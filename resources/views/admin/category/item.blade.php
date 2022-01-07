@@ -6,15 +6,6 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        {{-- @if (Session::has('createSuccess'))
-          <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ Session::get('createSuccess') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-        @endif --}}
-
         <div class="row">
           <div class="col-12 mt-4">
             {{ $pizza->links() }}

@@ -75,7 +75,7 @@
             </li>
 
             <li class="nav-item">
-              <a href="order.html" class="nav-link">
+              <a href="{{ route('admin#orderList') }}" class="nav-link">
                 <i class="fas fa-book"></i>
                 <p>
                   Order
@@ -84,10 +84,10 @@
             </li>
 
             <li class="nav-item">
-              <a href="carrier.html" class="nav-link">
-                <i class="fas fa-biking"></i>
+              <a href="{{ route('admin#contactList') }}" class="nav-link">
+                <i class="fas fa-file-signature"></i>
                 <p>
-                  Carrier
+                  Contact
                 </p>
               </a>
             </li>
@@ -106,7 +106,14 @@
         </nav>
       </div>
     </aside>
-
+    @if (Session::has('authErr'))
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ Session::get('authErr') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    @endif
     @yield('content')
 
     <aside class="control-sidebar control-sidebar-dark">

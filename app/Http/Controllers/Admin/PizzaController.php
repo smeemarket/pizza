@@ -8,6 +8,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class PizzaController extends Controller
@@ -15,9 +16,9 @@ class PizzaController extends Controller
     // direct pizza page
     public function pizza()
     {
-        $data = Pizza::paginate(9);
-        // dd($data->total());
-        return view('admin.pizza.list')->with('pizza', $data);
+        $pizza = Pizza::paginate(9);
+        // dd($pizza->total());
+        return view('admin.pizza.list')->with('pizza', $pizza);
     }
 
     // direct pizza page
@@ -148,12 +149,48 @@ class PizzaController extends Controller
     {
         $searchKey = $request->pizzaSearch;
 
+        Session::put('SEARCH_DATA', $searchKey);
+
         $searchData = Pizza::where('pizza_name', 'like', '%' . $searchKey . '%')
             ->orWhere('price', $searchKey)
             ->paginate(9);
         // dd($searchData->toArray());
         // return back()->with('pizza', $searchData);
         return view('admin.pizza.list')->with('pizza', $searchData);
+    }
+
+    // pizza download
+    public function pizzaDownload()
+    {
+        if (Session::has('SEARCH_DATA')) {
+            $pizza = Pizza::where('pizza_name', 'like', '%' . Session::get('SEARCH_DATA') . '%')
+                ->orWhere('price', Session::get('SEARCH_DATA'))
+                ->get();
+        } else {
+            $pizza = Pizza::get();
+        }
+
+        $csvExporter = new \Laracsv\Export();
+
+        $csvExporter->build($pizza, [
+            'pizza_id' => 'Id',
+            'pizza_name' => 'Name',
+            'price' => 'Price',
+            'publish_status' => 'Publish Status',
+            'buy_one_get_one_status' => 'Buy 1 Get 1',
+            'created_at' => 'Created Date',
+            'updated_at' => 'Updated Date'
+        ]);
+
+        $csvReader = $csvExporter->getReader();
+
+        $csvReader->setOutputBOM(\League\Csv\Reader::BOM_UTF8);
+
+        $filename = 'pizza.csv';
+
+        return response((string) $csvReader)
+            ->header('Content-Type', 'text/csv; charset=UTF-8')
+            ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
     }
 
     // look category item

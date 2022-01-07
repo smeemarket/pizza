@@ -11,6 +11,8 @@
   <link rel="icon" type="image/x-icon" href="{{ asset('customer/assets/favicon.ico') }}" />
   <!-- Core theme CSS (includes Bootstrap)-->
   <link href="{{ asset('customer/css/styles.css') }}" rel="stylesheet" />
+  {{-- Font Awesome --}}
+  <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
   <style>
     html {
       scroll-behavior: smooth;
@@ -68,9 +70,22 @@
       </div>
     </div>
   </nav>
+  @if (Session::has('authErr'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{ Session::get('authErr') }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  @endif
   <!-- Page Content-->
   @yield('content')
 
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+  </script>
   <!-- Bootstrap core JS-->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
   <!-- Core theme JS-->

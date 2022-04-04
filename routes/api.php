@@ -54,3 +54,4 @@ Route::group(['prefix' => 'category', 'namespace' => 'API', 'middleware' => 'aut
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('logout', 'AuthController@logout');
 });
+

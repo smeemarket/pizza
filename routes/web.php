@@ -90,3 +90,4 @@ Route::group(['prefix' => 'user', 'namespace' => 'User', 'middleware' => 'userCh
     Route::get('order', 'UserController@order')->name('user#order');
     Route::post('order', 'UserController@placeOrder')->name('user#placeOrder');
 });
+
